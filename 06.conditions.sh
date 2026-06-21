@@ -1,8 +1,8 @@
 #!/bin/bash
 
-Number=$1
+Number=$
 
-if [ $Number -gt 10]
+if [ $Number -gt 10 ]
 then
     echo "given number $Number is greater then 10"
 else
