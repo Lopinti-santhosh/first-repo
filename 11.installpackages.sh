@@ -1,44 +1,41 @@
 #!/bin/bash
 
-userid=$(id -u)
-
-timestamp=$(date +%f-%h-%m-%s)
-scriptname=$(echo $0 | cut -d "/" -f1)
-logfile=/tmp/${scriptname}_${timestamp}.log
-
+USERID=$(id -u)
+TIMESTAMP=$(date +%F-%H-%M-%S)
+SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
+LOGFILE=/tmp/$SCRIPT_NAME-$TIMESTAMP.log
 R="\e[31m"
-g="\e[32m"
+G="\e[32m"
 Y="\e[33m"
-n="\e[0m"
+N="\e[0m"
 
-
-
-validate(){
-    if [ $1 -ne 0 ]
-    then
-      echo -e "${R}its failure $2${N}"
+VALIDATE(){
+   if [ $1 -ne 0 ]
+   then
+        echo -e "$2...$R FAILURE $N"
         exit 1
     else
-        echo -e "${g}its success $2${N}"
+        echo -e "$2...$G SUCCESS $N"
     fi
 }
-if [ $userid -eq 0 ]
-then
-    echo "you are not super user"
-else
-   echo " you are  super user"
 
+if [ $USERID -ne 0 ]
+then
+    echo "Please run this script with root access."
+    exit 1 # manually exit if error comes.
+else
+    echo "You are super user."
 fi
 
-for i in {$@}
+for i in $@
 do
- echo "package to install: $i"
- dnf list installed $i &>>$logfile
-if [ $? -eq 0 ]
+    echo "package to install: $i"
+    dnf list installed $i &>>$LOGFILE
+    if [ $? -eq 0 ]
     then
         echo -e "$i already installed...$Y SKIPPING $N"
     else
-        dnf install $i -y &>>$logfile
-        validate $? "Installation of $i"
+        dnf install $i -y &>>$LOGFILE
+        VALIDATE $? "Installation of $i"
     fi
 done
