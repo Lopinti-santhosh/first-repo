@@ -2,7 +2,7 @@
 
 USERID=$(id -u)
 timestamp=$(date +%f-%h-%m-%s)
-scriptname=$($0 | cut -d "/" -f1)
+scriptname=$(echo $0 | cut -d "/" -f1)
 logfile=/tmp/${scriptname}_${timestamp}.log
 
 validate(){
